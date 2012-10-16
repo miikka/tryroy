@@ -7,6 +7,12 @@ $(function() {
   $('body').append(console);
 
   var env = {};
+  window.env = env;
+  $.get("prelude.roy", {}, function (data) {
+    window.console.log("foo");
+    var compiled = roy.compile(data, env, {}, {nodejs: true});
+    eval_(compiled.output);
+  }, "text");
 
   var controller = console.console({
     promptLabel: 'λ> ',
@@ -26,12 +32,12 @@ $(function() {
       }
 
       try {
-        var compiled = roy.compile(line, env, {}, {nodejs: true, run: true});
+        var compiled = roy.compile(line, env, {}, {nodejs: true});
         var output = eval_(compiled.output);
 
-        if (output) {
-          return [{msg: output, className: "jquery-console-message-value"},
-                  {msg: ": " + compiled.type.name, className: "jquery-console-message-type"}];
+        if (output != undefined) {
+          return [{msg: JSON.stringify(output), className: "jquery-console-message-value"},
+                  {msg: ": " + compiled.type.toString(), className: "jquery-console-message-type"}];
         } else {
           return true;
         }
