@@ -1,0 +1,31 @@
+body {
+  background-color: #002b36;
+}
+
+.console {
+  font-family: "Menlo", monospace;
+  font-size: 14px;
+  padding: 1em;
+  color: #839496;
+  background-color: #002b36;
+}
+
+.jquery-console-cursor {
+  background: #073642;
+}
+
+.jquery-console-prompt-label {
+  color: #586e75;
+}
+
+.jquery-console-message-value {
+  color: #268bd2;
+}
+
+.jquery-console-message-type {
+  color: #2aa198;
+}
+
+.jquery-console-message-error {
+  color: #dc322f;
+}
