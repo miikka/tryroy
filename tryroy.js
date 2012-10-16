@@ -9,7 +9,6 @@ $(function() {
   var env = {};
   window.env = env;
   $.get("prelude.roy", {}, function (data) {
-    window.console.log("foo");
     var compiled = roy.compile(data, env, {}, {nodejs: true});
     eval_(compiled.output);
   }, "text");
