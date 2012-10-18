@@ -46,7 +46,7 @@ $(function() {
       case ":t":
         var term = parts[1]
         if (env[term]) {
-          return [fmtType(term)];
+          return [fmtType(env[term])];
         } else {
           return [fmtError(term + " is not defined.")];
         }
