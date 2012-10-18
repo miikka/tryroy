@@ -1,12 +1,13 @@
 body {
   background-color: #002b36;
+  padding: 0em 1em;
+  font-family: "Menlo", monospace;
+  font-size: 14px;
+  color: #839496;
 }
 
 .console {
-  font-family: "Menlo", monospace;
-  font-size: 14px;
-  padding: 1em;
-  color: #839496;
+  padding: 1em 0em;
   background-color: #002b36;
 }
 
@@ -28,4 +29,12 @@ body {
 
 .jquery-console-message-error {
   color: #dc322f;
+}
+
+a:link {
+  color: #268bd2;
+}
+
+a:visited {
+  color: #6c71c4;
 }

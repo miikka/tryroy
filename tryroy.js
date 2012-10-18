@@ -33,7 +33,12 @@ $(function() {
     autofocus: true,
     animateScroll: true,
     promptHistory: true,
-    welcomeMessage: "Roy, you say? Here's an interactive session of Roy:",
+    welcomeMessage: "Here's an interactive Roy session:",
+
+    commandValidate: function(line) {
+      return line != "";
+    },
+
     commandHandle: function (line, report) {
       var parts = line.split(" ");
 
