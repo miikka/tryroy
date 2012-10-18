@@ -2,6 +2,20 @@ function eval_(code) {
   return eval.call(this, code);
 }
 
+function evalRoy(code, env) {
+  var compiled = roy.compile(code, env, {}, {nodejs: true});
+  compiled.result = eval_(compiled.output);
+  return compiled;
+}
+
+function fmt(value, className) {
+  return {msg: value, className: "jquery-console-message-" + className};
+}
+
+function fmtValue(value) { return fmt(value, "value"); }
+function fmtType(value) { return fmt(value, "type"); }
+function fmtError(value) { return fmt(value, "error"); }
+
 $(function() {
   var console = $('<div class="console"></div>');
   $('body').append(console);
@@ -9,8 +23,7 @@ $(function() {
   var env = {};
   window.env = env;
   $.get("prelude.roy", {}, function (data) {
-    var compiled = roy.compile(data, env, {}, {nodejs: true});
-    eval_(compiled.output);
+    evalRoy(data, env);
   }, "text");
 
   var controller = console.console({
@@ -21,27 +34,38 @@ $(function() {
     welcomeMessage: "Roy, you say? Here's an interactive session of Roy:",
     commandHandle: function (line, report) {
       var parts = line.split(" ");
-      if (parts[0] == ":t") {
+
+      switch (parts[0]) {
+      case ":t":
         var term = parts[1]
         if (env[term]) {
-          return [{msg: env[term], className: "jquery-console-message-type"}];
+          return [fmtType(term)];
         } else {
-          return [{msg: term + " is not defined.", className: "jquery-console-message-error"}];
+          return [fmtError(term + " is not defined.")];
         }
-      }
 
-      try {
-        var compiled = roy.compile(line, env, {}, {nodejs: true});
-        var output = eval_(compiled.output);
-
-        if (output != undefined) {
-          return [{msg: JSON.stringify(output), className: "jquery-console-message-value"},
-                  {msg: ": " + compiled.type.toString(), className: "jquery-console-message-type"}];
-        } else {
-          return true;
+      case ":c":
+        try {
+          var code = parts.slice(1).join(" ");
+          var compiled = roy.compile(code, env, {}, {nodejs: true});
+          return [fmt(compiled.output, "code")];
+        } catch(e) {
+          return [fmtError(e.toString())];
         }
-      } catch(e) {
-        return [{msg: e.toString(), className: "jquery-console-message-error"}];
+
+      default:
+        try {
+          var evaled = evalRoy(line, env);
+
+          if (evaled != undefined) {
+            return [fmtValue(JSON.stringify(evaled.result)),
+                    fmtType(": " + evaled.type.toString())];
+          } else {
+            return true;
+          }
+        } catch(e) {
+          return [fmtError(e.toString())];
+        }
       }
     }
   });
