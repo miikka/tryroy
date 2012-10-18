@@ -1,9 +1,13 @@
+/* FIXME: Icky globals. */
+var env = {};
+var aliases = {};
+
 function eval_(code) {
   return eval.call(this, code);
 }
 
-function evalRoy(code, env) {
-  var compiled = roy.compile(code, env, {}, {nodejs: true});
+function evalRoy(code) {
+  var compiled = roy.compile(code, env, aliases, {nodejs: true});
   compiled.result = eval_(compiled.output);
   return compiled;
 }
@@ -20,10 +24,8 @@ $(function() {
   var console = $('<div class="console"></div>');
   $('body').append(console);
 
-  var env = {};
-  window.env = env;
   $.get("prelude.roy", {}, function (data) {
-    evalRoy(data, env);
+    evalRoy(data);
   }, "text");
 
   var controller = console.console({
@@ -47,7 +49,7 @@ $(function() {
       case ":c":
         try {
           var code = parts.slice(1).join(" ");
-          var compiled = roy.compile(code, env, {}, {nodejs: true});
+          var compiled = roy.compile(code, env, aliases, {nodejs: true});
           return [fmt(compiled.output, "code")];
         } catch(e) {
           return [fmtError(e.toString())];
@@ -55,7 +57,7 @@ $(function() {
 
       default:
         try {
-          var evaled = evalRoy(line, env);
+          var evaled = evalRoy(line);
 
           if (evaled != undefined) {
             return [fmtValue(JSON.stringify(evaled.result)),
