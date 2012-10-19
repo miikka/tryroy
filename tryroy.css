@@ -1,3 +1,5 @@
+/* Colors from Solarized: http://ethanschoonover.com/solarized#the-values */
+
 body {
   background-color: #002b36;
   padding: 0em 1em;
@@ -37,4 +39,9 @@ a:link {
 
 a:visited {
   color: #6c71c4;
+}
+
+.cheatsheet pre {
+  background: #073642;
+  padding: 1em;
 }
